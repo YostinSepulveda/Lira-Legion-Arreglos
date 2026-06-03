@@ -34,6 +34,10 @@
         }
         .title-area { display: flex; align-items: center; gap: 8px; }
         .badge { background-color: #f59e0b; color: #0f172a; padding: 3px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        
+        /* Controles de carga */
+        .load-controls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+        .select-remote { background-color: #0f172a; color: #f59e0b; border: 1px solid #334155; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; outline: none; cursor: pointer; }
         .btn-upload { background-color: #475569; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; border: 1px solid #64748b; font-weight: bold; }
         .btn-toggle { background-color: #f59e0b; color: #0f172a; border: none; padding: 6px 10px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer; }
         .btn-fullscreen { background-color: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
@@ -66,6 +70,7 @@
             height: 98%;
             max-height: 520px;
             box-sizing: border-box;
+            clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
             background-color: #27170c;
             background-image: linear-gradient(95deg, transparent 20%, #4a150b 20%, #310d07 32%, transparent 32%, transparent 45%, #4a150b 45%, #310d07 55%, transparent 55%, transparent 68%, #4a150b 68%, #310d07 80%, transparent 80%);
             box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
@@ -74,94 +79,43 @@
             padding: 12px;
         }
 
-        /* Varillas de metal laterales */
         .lira-frame::before {
-            content: "";
-            position: absolute;
-            top: 0; bottom: 0; left: 6px;
-            width: 8px;
-            background: linear-gradient(90deg, #94a3b8, #cbd5e1, #64748b);
-            border-radius: 4px;
-            transform: rotate(4deg);
-            transform-origin: bottom left;
+            content: ""; position: absolute; top: 0; bottom: 0; left: 6px; width: 8px;
+            background: linear-gradient(90deg, #94a3b8, #cbd5e1, #64748b); border-radius: 4px; transform: rotate(4deg); transform-origin: bottom left;
         }
         .lira-frame::after {
-            content: "";
-            position: absolute;
-            top: 0; bottom: 0; right: 6px;
-            width: 8px;
-            background: linear-gradient(90deg, #64748b, #cbd5e1, #94a3b8);
-            border-radius: 4px;
-            transform: rotate(-4deg);
-            transform-origin: bottom right;
+            content: ""; position: absolute; top: 0; bottom: 0; right: 6px; width: 8px;
+            background: linear-gradient(90deg, #64748b, #cbd5e1, #94a3b8); border-radius: 4px; transform: rotate(-4deg); transform-origin: bottom right;
         }
         
-        .keyboard-area {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            z-index: 6;
-        }
+        .keyboard-area { position: relative; width: 100%; height: 100%; z-index: 6; }
 
         .glock-key {
             background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
-            color: #1e293b;
-            border: 1px solid #78887b;
-            border-radius: 3px;
-            font-weight: bold;
-            font-family: monospace;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-sizing: border-box;
-            position: absolute;
-            box-shadow: 2px 3px 6px rgba(0,0,0,0.5);
-            z-index: 10;
-            will-change: background, color;
+            color: #1e293b; border: 1px solid #78887b; border-radius: 3px; font-weight: bold; font-family: monospace;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; box-sizing: border-box; position: absolute;
+            box-shadow: 2px 3px 6px rgba(0,0,0,0.5); z-index: 10; will-change: background, color;
         }
         
         .glock-key.active {
             background: linear-gradient(180deg, #22d3ee 0%, #06b6d4 100%) !important;
-            color: white !important;
-            box-shadow: 0 0 14px #22d3ee;
-            border-color: #0891b2;
+            color: white !important; box-shadow: 0 0 14px #22d3ee; border-color: #0891b2;
         }
 
         .rivet {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            background: radial-gradient(circle, #475569 0%, #0f172a 100%);
-            border: 1px solid #64748b;
-            border-radius: 50%;
-            top: calc(50% - 3px);
+            position: absolute; width: 5px; height: 5px; border-radius: 50%; top: calc(50% - 3px);
+            background: radial-gradient(circle, #475569 0%, #0f172a 100%); border: 1px solid #64748b;
         }
-        .rivet-left { left: 5px; }
-        .rivet-right { right: 5px; }
+        .rivet-left { left: 5px; } .rivet-right { right: 5px; }
 
         footer {
-            width: 110px;
-            background-color: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 10px;
+            width: 110px; background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 10px;
+            display: flex; flex-direction: column; justify-content: space-between; gap: 10px;
         }
         .control-block { display: flex; flex-direction: column; gap: 6px; }
         .timeline-vertical { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; justify-content: center; }
         
-        .slider-v { 
-            writing-mode: bt-lr; 
-            -webkit-appearance: slider-vertical; 
-            width: 8px; 
-            height: 100%; 
-            min-height: 100px; 
-            accent-color: #f59e0b;
-        }
+        .slider-v { writing-mode: bt-lr; -webkit-appearance: slider-vertical; width: 8px; height: 100%; min-height: 100px; accent-color: #f59e0b; }
         .slider-h { width: 100%; accent-color: #f59e0b; cursor: pointer; }
         
         .btn-play { background-color: #f59e0b; color: #0f172a; border: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; width: 100%; text-align: center; }
@@ -185,18 +139,24 @@
         <div class="title-area">
             <div class="badge">A5 - Bb7</div>
             <div>
-                <!-- Título y subtítulo actualizados -->
                 <b style="font-size: 14px; display: block; color: #ffffff;">Lira LegionArreglos</b>
-                <span style="font-size: 10px; color: #94a3b8;">Versión: 1.0.0</span>
+                <span style="font-size: 10px; color: #94a3b8;">Versión: 2.0.0 (Remoto)</span>
             </div>
         </div>
-        <div style="display: flex; gap: 6px; align-items: center;">
+        <div class="load-controls">
+            <select id="select-marcha-remota" class="select-remote">
+                <option value="">-- Elegir Marcha del Servidor --</option>
+                <option value="marcha1.xml">Marcha de Ejemplo 1</option>
+                <option value="marcha2.xml">Marcha de Ejemplo 2</option>
+                <option value="himno_ejemplo.xml">Himno Institucional</option>
+            </select>
+
             <label class="btn-upload">
-                📂 Partitura
+                📂 Subir Local
                 <input type="file" id="file-input" accept="*/*" style="display: none;">
             </label>
             <button id="toggle-notation" class="btn-toggle">Cifrado: Trad</button>
-            <button id="btn-fullscreen" class="btn-fullscreen" title="Pantalla Completa">
+            <button id="btn-fullscreen" class="btn-fullscreen">
                 <span>⛶</span> <span>Pantalla Completa</span>
             </button>
         </div>
@@ -229,82 +189,51 @@
                 <input type="range" id="tempo-slider" min="40" max="200" value="120" class="slider-h">
             </div>
 
-            <div id="status-badge">Sube tu archivo .xml o .musicxml</div>
+            <div id="status-badge">Sube o selecciona una marcha</div>
         </footer>
     </div>
 
     <script>
         let audioCtx = null;
         function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new AudioContext();
-            }
+            if (!audioCtx) audioCtx = new AudioContext();
         }
 
         function scheduleLiraNote(midiNote, targetAudioTime) {
             if (!audioCtx) return;
             const frequency = 440 * Math.pow(2, (midiNote - 69) / 12);
-            
             const osc = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
-
             osc.type = 'triangle'; 
             osc.frequency.setValueAtTime(frequency, targetAudioTime);
-
             gainNode.gain.setValueAtTime(0.4, targetAudioTime);
             gainNode.gain.exponentialRampToValueAtTime(0.0001, targetAudioTime + 0.8);
-
             osc.connect(gainNode);
             gainNode.connect(audioCtx.destination);
-            
             osc.start(targetAudioTime);
             osc.stop(targetAudioTime + 0.8);
         }
 
         const noteDefinition = [
-            { midi: 81, trad: "LA 5", am: "A5", type: "natural" },
-            { midi: 82, trad: "SIB 5", am: "Bb5", type: "accidental" },
-            { midi: 83, trad: "SI 5", am: "B5", type: "natural" },
-            { midi: 84, trad: "DO 6", am: "C6", type: "natural" },
-            { midi: 85, trad: "DO# 6", am: "C#6", type: "accidental" },
-            { midi: 86, trad: "RE 6", am: "D6", type: "natural" },
-            { midi: 87, trad: "RE# 6", am: "D#6", type: "accidental" },
-            { midi: 88, trad: "MI 6", am: "E6", type: "natural" },
-            { midi: 89, trad: "FA 6", am: "F6", type: "natural" },
-            { midi: 90, trad: "FA# 6", am: "F#6", type: "accidental" },
-            { midi: 91, trad: "SOL 6", am: "G6", type: "natural" },
-            { midi: 92, trad: "SOL# 6", am: "G#6", type: "accidental" },
-            { midi: 93, trad: "LA 6", am: "A6", type: "natural" },
-            { midi: 94, trad: "SIB 6", am: "Bb6", type: "accidental" },
-            { midi: 95, trad: "SI 6", am: "B6", type: "natural" },
-            { midi: 96, trad: "DO 7", am: "C7", type: "natural" },
-            { midi: 97, trad: "DO# 7", am: "C#7", type: "accidental" },
-            { midi: 98, trad: "RE 7", am: "D7", type: "natural" },
-            { midi: 99, trad: "RE# 7", am: "D#7", type: "accidental" },
-            { midi: 100, trad: "MI 7", am: "E7", type: "natural" },
-            { midi: 101, trad: "FA 7", am: "F7", type: "natural" },
-            { midi: 102, trad: "FA# 7", am: "F#7", type: "accidental" },
-            { midi: 103, trad: "SOL 7", am: "G7", type: "natural" },
-            { midi: 104, trad: "SOL# 7", am: "G#7", type: "accidental" },
-            { midi: 105, trad: "LA 7", am: "A7", type: "natural" },
-            { midi: 106, trad: "SIB 7", am: "Bb7", type: "accidental" }
+            { midi: 81, trad: "LA 5", am: "A5", type: "natural" }, { midi: 82, trad: "SIB 5", am: "Bb5", type: "accidental" },
+            { midi: 83, trad: "SI 5", am: "B5", type: "natural" }, { midi: 84, trad: "DO 6", am: "C6", type: "natural" },
+            { midi: 85, trad: "DO# 6", am: "C#6", type: "accidental" }, { midi: 86, trad: "RE 6", am: "D6", type: "natural" },
+            { midi: 87, trad: "RE# 6", am: "D#6", type: "accidental" }, { midi: 88, trad: "MI 6", am: "E6", type: "natural" },
+            { midi: 89, trad: "FA 6", am: "F6", type: "natural" }, { midi: 90, trad: "FA# 6", am: "F#6", type: "accidental" },
+            { midi: 91, trad: "SOL 6", am: "G6", type: "natural" }, { midi: 92, trad: "SOL# 6", am: "G#6", type: "accidental" },
+            { midi: 93, trad: "LA 6", am: "A6", type: "natural" }, { midi: 94, trad: "SIB 6", am: "Bb6", type: "accidental" },
+            { midi: 95, trad: "SI 6", am: "B6", type: "natural" }, { midi: 96, trad: "DO 7", am: "C7", type: "natural" },
+            { midi: 97, trad: "DO# 7", am: "C#7", type: "accidental" }, { midi: 98, trad: "RE 7", am: "D7", type: "natural" },
+            { midi: 99, trad: "RE# 7", am: "D#7", type: "accidental" }, { midi: 100, trad: "MI 7", am: "E7", type: "natural" },
+            { midi: 101, trad: "FA 7", am: "F7", type: "natural" }, { midi: 102, trad: "FA# 7", am: "F#7", type: "accidental" },
+            { midi: 103, trad: "SOL 7", am: "G7", type: "natural" }, { midi: 104, trad: "SOL# 7", am: "G#7", type: "accidental" },
+            { midi: 105, trad: "LA 7", am: "A7", type: "natural" }, { midi: 106, trad: "SIB 7", am: "Bb7", type: "accidental" }
         ];
 
-        let notationMode = "trad";
-        let loadedNotes = [];
-        let totalSongDuration = 0;
-        
-        let isPlaying = false;
-        let originalBPM = 120;
-        let activeBPM = 120;
-        
-        let songPlaybackPosition = 0; 
-        let audioStartTime = 0;        
-        let lastScheduledSongTime = 0; 
-        
-        let schedulerTimerId = null;
-        const LOOK_AHEAD_MS = 25;       
-        const SCHEDULE_AHEAD_SEC = 0.10; 
+        let notationMode = "trad"; let loadedNotes = []; let totalSongDuration = 0;
+        let isPlaying = false; let originalBPM = 120; let activeBPM = 120;
+        let songPlaybackPosition = 0; let audioStartTime = 0; let lastScheduledSongTime = 0;
+        let schedulerTimerId = null; const LOOK_AHEAD_MS = 25; const SCHEDULE_AHEAD_SEC = 0.10;
 
         const keyboardContainer = document.getElementById("keyboard-container");
         const statusBadge = document.getElementById("status-badge");
@@ -315,175 +244,144 @@
             const totalNaturals = naturals.length;
             const stepPercent = 100 / totalNaturals;
 
-            // Naturales (Derecha)
             naturals.forEach((note, index) => {
                 const key = document.createElement("div");
-                key.className = "glock-key";
-                key.id = `key-${note.midi}`;
-                
+                key.className = "glock-key"; key.id = `key-${note.midi}`;
                 const bottomPosition = index * stepPercent;
-                const baseWidth = 130;
-                const topWidth = 85;
+                const baseWidth = 130; const topWidth = 85;
                 const dynamicWidth = baseWidth - (index * ((baseWidth - topWidth) / totalNaturals));
-                
-                key.style.bottom = `${bottomPosition}%`;
-                key.style.height = `calc(${stepPercent}% - 4px)`;
-                key.style.width = `${dynamicWidth}px`;
-                key.style.right = `calc(50% - ${dynamicWidth}px - 2px)`;
+                key.style.bottom = `${bottomPosition}%`; key.style.height = `calc(${stepPercent}% - 4px)`;
+                key.style.width = `${dynamicWidth}px`; key.style.right = `calc(50% - ${dynamicWidth}px - 2px)`;
                 key.style.fontSize = "11px";
+                key.innerHTML = `<div class="rivet rivet-left"></div><span>${notationMode === 'trad' ? note.trad : note.am}</span><div class="rivet rivet-right"></div>`;
                 
-                key.innerHTML = `<div class="rivet rivet-left"></div>
-                                 <span>${notationMode === 'trad' ? note.trad : note.am}</span>
-                                 <div class="rivet rivet-right"></div>`;
-                
-                const trigger = (e) => { e.preventDefault(); initAudio(); playLiraSoundManual(note.midi); flashKey(key, 0.15); };
-                key.addEventListener("mousedown", trigger);
-                key.addEventListener("touchstart", trigger);
-                
+                const trigger = (e) => { e.preventDefault(); initAudio(); if(audioCtx) scheduleLiraNote(note.midi, audioCtx.currentTime); flashKey(key, 0.15); };
+                key.addEventListener("mousedown", trigger); key.addEventListener("touchstart", trigger);
                 keyboardContainer.appendChild(key);
             });
 
-            // Alteraciones (Izquierda)
             noteDefinition.forEach((note) => {
                 if (note.type === "accidental") {
                     const naturalBefore = noteDefinition.find(n => n.midi === note.midi - 1);
                     if (naturalBefore) {
                         const natIndex = naturals.findIndex(n => n.midi === naturalBefore.midi);
                         const bottomPosition = ((natIndex + 1) * stepPercent) - (stepPercent * 0.35);
-                        
-                        const baseWidth = 110;
-                        const topWidth = 70;
+                        const baseWidth = 110; const topWidth = 70;
                         const dynamicWidth = baseWidth - (natIndex * ((baseWidth - topWidth) / totalNaturals));
 
                         const key = document.createElement("div");
-                        key.className = "glock-key";
-                        key.id = `key-${note.midi}`;
-                        
-                        key.style.bottom = `${bottomPosition}%`;
-                        key.style.height = `calc(${stepPercent}% - 6px)`;
-                        key.style.width = `${dynamicWidth}px`;
-                        key.style.left = `calc(50% - ${dynamicWidth}px - 2px)`;
+                        key.className = "glock-key"; key.id = `key-${note.midi}`;
+                        key.style.bottom = `${bottomPosition}%`; key.style.height = `calc(${stepPercent}% - 6px)`;
+                        key.style.width = `${dynamicWidth}px`; key.style.left = `calc(50% - ${dynamicWidth}px - 2px)`;
                         key.style.fontSize = "10px";
-                        
-                        key.innerHTML = `<div class="rivet rivet-left"></div>
-                                         <span>${notationMode === 'trad' ? note.trad : note.am}</span>
-                                         <div class="rivet rivet-right"></div>`;
+                        key.innerHTML = `<div class="rivet rivet-left"></div><span>${notationMode === 'trad' ? note.trad : note.am}</span><div class="rivet rivet-right"></div>`;
 
-                        const trigger = (e) => { e.preventDefault(); initAudio(); playLiraSoundManual(note.midi); flashKey(key, 0.15); };
-                        key.addEventListener("mousedown", trigger);
-                        key.addEventListener("touchstart", trigger);
-                        
+                        const trigger = (e) => { e.preventDefault(); initAudio(); if(audioCtx) scheduleLiraNote(note.midi, audioCtx.currentTime); flashKey(key, 0.15); };
+                        key.addEventListener("mousedown", trigger); key.addEventListener("touchstart", trigger);
                         keyboardContainer.appendChild(key);
                     }
                 }
             });
         }
 
-        function playLiraSoundManual(midiNote) {
-            if (audioCtx) scheduleLiraNote(midiNote, audioCtx.currentTime);
-        }
-
         function flashKey(element, duration) {
-            element.classList.remove("active");
-            void element.offsetWidth; 
-            element.classList.add("active");
-            let clearMs = Math.min(duration * 800, 110); 
-            setTimeout(() => { element.classList.remove("active"); }, clearMs);
+            element.classList.remove("active"); void element.offsetWidth; element.classList.add("active");
+            setTimeout(() => { element.classList.remove("active"); }, Math.min(duration * 800, 110));
         }
 
-        document.getElementById("toggle-notation").addEventListener("click", (e) => {
-            notationMode = notationMode === "trad" ? "am" : "trad";
-            e.target.textContent = `Cifrado: ${notationMode === 'trad' ? 'Trad' : 'Am'}`;
-            renderLiraPiramidal();
-        });
+        function parseMusicXML(xmlText) {
+            try {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+                loadedNotes = []; let timeCounter = 0; let divisions = 1;
 
-        // Alternar pantalla completa
-        document.getElementById("btn-fullscreen").addEventListener("click", () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    alert(`Error al activar pantalla completa: ${err.message}`);
-                });
-            } else {
-                document.exitFullscreen();
-            }
-        });
+                const divEl = xmlDoc.querySelector("divisions");
+                if (divEl) divisions = parseInt(divEl.textContent) || 1;
 
-        document.getElementById("file-input").addEventListener("change", function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            statusBadge.textContent = "Cargando...";
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                try {
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(evt.target.result, "text/xml");
-                    
-                    loadedNotes = [];
-                    let timeCounter = 0;
-                    let divisions = 1;
+                const tempoEl = xmlDoc.querySelector("sound");
+                if (tempoEl && tempoEl.getAttribute("tempo")) {
+                    originalBPM = parseInt(tempoEl.getAttribute("tempo"));
+                    activeBPM = originalBPM;
+                    document.getElementById("tempo-slider").value = activeBPM;
+                    document.getElementById("tempo-val").textContent = `${activeBPM} BPM`;
+                } else {
+                    originalBPM = 120; activeBPM = 120;
+                }
 
-                    const divEl = xmlDoc.querySelector("divisions");
-                    if (divEl) divisions = parseInt(divEl.textContent) || 1;
+                const measures = xmlDoc.querySelectorAll("measure");
+                measures.forEach(m => {
+                    const notes = m.querySelectorAll("note");
+                    notes.forEach(n => {
+                        const isRest = n.querySelector("rest") !== null;
+                        const durEl = n.querySelector("duration");
+                        let duration = durEl ? parseInt(durEl.textContent) : divisions;
+                        let seconds = (duration / divisions) * (60 / activeBPM);
 
-                    const tempoEl = xmlDoc.querySelector("sound");
-                    if (tempoEl && tempoEl.getAttribute("tempo")) {
-                        originalBPM = parseInt(tempoEl.getAttribute("tempo"));
-                        activeBPM = originalBPM;
-                        document.getElementById("tempo-slider").value = activeBPM;
-                        document.getElementById("tempo-val").textContent = `${activeBPM} BPM`;
-                    } else {
-                        originalBPM = 120;
-                        activeBPM = 120;
-                    }
+                        if (!isRest) {
+                            const stepEl = n.querySelector("step"); const octEl = n.querySelector("octave"); const altEl = n.querySelector("alter");
+                            if (stepEl && octEl) {
+                                let step = stepEl.textContent; let octave = parseInt(octEl.textContent); let alter = altEl ? parseInt(altEl.textContent) : 0;
+                                const stepMap = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 };
+                                let baseMidi = 12 * (octave + 1) + stepMap[step.toUpperCase()] + alter;
+                                let transposedMidi = baseMidi + 24;
 
-                    const measures = xmlDoc.querySelectorAll("measure");
-                    measures.forEach(m => {
-                        const notes = m.querySelectorAll("note");
-                        notes.forEach(n => {
-                            const isRest = n.querySelector("rest") !== null;
-                            const durEl = n.querySelector("duration");
-                            let duration = durEl ? parseInt(durEl.textContent) : divisions;
-                            let seconds = (duration / divisions) * (60 / activeBPM);
-
-                            if (!isRest) {
-                                const stepEl = n.querySelector("step");
-                                const octEl = n.querySelector("octave");
-                                const altEl = n.querySelector("alter");
-                                if (stepEl && octEl) {
-                                    let step = stepEl.textContent;
-                                    let octave = parseInt(octEl.textContent);
-                                    let alter = altEl ? parseInt(altEl.textContent) : 0;
-                                    
-                                    const stepMap = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 };
-                                    let baseMidi = 12 * (octave + 1) + stepMap[step.toUpperCase()] + alter;
-                                    let transposedMidi = baseMidi + 24;
-
-                                    if (transposedMidi >= 81 && transposedMidi <= 106) {
-                                        loadedNotes.push({ midi: transposedMidi, time: timeCounter, dur: seconds });
-                                    }
+                                if (transposedMidi >= 81 && transposedMidi <= 106) {
+                                    loadedNotes.push({ midi: transposedMidi, time: timeCounter, dur: seconds });
                                 }
                             }
-                            timeCounter += seconds;
-                        });
+                        }
+                        timeCounter += seconds;
                     });
+                });
 
-                    totalSongDuration = timeCounter;
-                    document.getElementById("progress-bar").max = totalSongDuration;
-                    document.getElementById("progress-bar").value = 0;
-                    songPlaybackPosition = 0;
-                    
-                    document.getElementById("total-time").textContent = formatTime(totalSongDuration);
-                    document.getElementById("current-time").textContent = "00:00";
-                    
-                    statusBadge.textContent = "Listo (" + loadedNotes.length + " notas)";
-                    statusBadge.style.color = "#4ade80";
+                totalSongDuration = timeCounter;
+                document.getElementById("progress-bar").max = totalSongDuration;
+                document.getElementById("progress-bar").value = 0;
+                songPlaybackPosition = 0;
+                document.getElementById("total-time").textContent = formatTime(totalSongDuration);
+                document.getElementById("current-time").textContent = "00:00";
+                statusBadge.textContent = "Listo (" + loadedNotes.length + " notas)";
+                statusBadge.style.color = "#4ade80";
+            } catch(err) {
+                statusBadge.textContent = "Error de formato XML"; statusBadge.style.color = "#f87171";
+            }
+        }
 
-                } catch(err) {
-                    statusBadge.textContent = "Error de formato XML";
+        // --- SISTEMA DE CARGA REMOTA DESDE GITHUB PAGES ---
+        document.getElementById("select-marcha-remota").addEventListener("change", function(e) {
+            const fileName = e.target.value;
+            if (!fileName) return;
+            
+            document.getElementById("file-input").value = ""; // Limpiar input local
+            statusBadge.textContent = "Descargando marcha...";
+            statusBadge.style.color = "#f59e0b";
+
+            // Calcula la ruta relativa a donde está corriendo tu index.html
+            // Busca automáticamente el archivo en la subcarpeta 'marchas/' de tu repositorio
+            const urlMarcha = `./marchas/${fileName}`;
+
+            fetch(urlMarcha)
+                .then(response => {
+                    if (!response.ok) throw new Error("No se encontró la marcha en el repositorio");
+                    return response.text();
+                })
+                .then(xmlText => {
+                    parseMusicXML(xmlText);
+                })
+                .catch(err => {
+                    alert("Error remoto: " + err.message + "\\n\\nAsegúrate de guardar el archivo en la carpeta 'marchas' con extensión .xml");
+                    statusBadge.textContent = "Error de descarga";
                     statusBadge.style.color = "#f87171";
-                }
-            };
+                });
+        });
+
+        // Subida local tradicional
+        document.getElementById("file-input").addEventListener("change", function(e) {
+            const file = e.target.files[0]; if (!file) return;
+            document.getElementById("select-marcha-remota").value = "";
+            statusBadge.textContent = "Cargando local...";
+            const reader = new FileReader();
+            reader.onload = function(evt) { parseMusicXML(evt.target.result); };
             reader.readAsText(file);
         });
 
@@ -495,40 +393,25 @@
 
         function engineScheduler() {
             if (!isPlaying) return;
-
             let currentAudioTime = audioCtx.currentTime;
-            let timeElapsedInAudio = currentAudioTime - audioStartTime;
-            let speedFactor = activeBPM / originalBPM;
-            let currentSongTime = songPlaybackPosition + (timeElapsedInAudio * speedFactor);
+            let currentSongTime = songPlaybackPosition + ((currentAudioTime - audioStartTime) * (activeBPM / originalBPM));
 
             if (currentSongTime >= totalSongDuration) {
-                currentSongTime = totalSongDuration;
-                stopPlaybackEngine();
-                resetTimelineToZero();
-                return;
+                currentSongTime = totalSongDuration; stopPlaybackEngine(); resetTimelineToZero(); return;
             }
 
             document.getElementById("progress-bar").value = currentSongTime;
             document.getElementById("current-time").textContent = formatTime(currentSongTime);
-
             let endScanZone = currentSongTime + SCHEDULE_AHEAD_SEC;
 
             loadedNotes.forEach(note => {
-                if (currentPlaybackTime >= note.time && !note.played && currentPlaybackTime < note.time + 0.015) { // Para la barra y tutor local
-                }
-                if (currentSongTime >= note.time && note.time >= lastScheduledSongTime && note.time < endScanZone) {
-                }
                 if (note.time >= lastScheduledSongTime && note.time < endScanZone) {
-                    let noteTimeOffsetInSong = note.time - currentSongTime;
-                    let targetAudioNoteTime = currentAudioTime + (noteTimeOffsetInSong / speedFactor);
-
+                    let targetAudioNoteTime = currentAudioTime + ((note.time - currentSongTime) / (activeBPM / originalBPM));
                     scheduleLiraNote(note.midi, targetAudioNoteTime);
-
-                    let visualDelayMs = (targetAudioNoteTime - audioCtx.currentTime) * 1000;
                     setTimeout(() => {
                         let key = document.getElementById(`key-${note.midi}`);
                         if (key && isPlaying) flashKey(key, note.dur);
-                    }, Math.max(0, visualDelayMs));
+                    }, Math.max(0, (targetAudioNoteTime - audioCtx.currentTime) * 1000));
                 }
             });
 
@@ -537,70 +420,33 @@
         }
 
         function startPlaybackEngine() {
-            if (loadedNotes.length === 0) return alert("Por favor, carga primero un archivo válido.");
-            initAudio(); 
-            isPlaying = true;
-            document.getElementById("btn-play-pause").textContent = "PAUSE";
-            
-            audioStartTime = audioCtx.currentTime;
-            lastScheduledSongTime = songPlaybackPosition;
-            
+            if (loadedNotes.length === 0) return alert("Por favor, selecciona una marcha.");
+            initAudio(); isPlaying = true; document.getElementById("btn-play-pause").textContent = "PAUSE";
+            audioStartTime = audioCtx.currentTime; lastScheduledSongTime = songPlaybackPosition;
             engineScheduler();
         }
 
         function stopPlaybackEngine() {
-            isPlaying = false;
-            document.getElementById("btn-play-pause").textContent = "PLAY";
+            isPlaying = false; document.getElementById("btn-play-pause").textContent = "PLAY";
             if (schedulerTimerId) clearTimeout(schedulerTimerId);
         }
 
         function resetTimelineToZero() {
-            songPlaybackPosition = 0;
-            document.getElementById("progress-bar").value = 0;
+            songPlaybackPosition = 0; document.getElementById("progress-bar").value = 0;
             document.getElementById("current-time").textContent = "00:00";
             document.querySelectorAll(".glock-key").forEach(k => k.classList.remove("active"));
         }
 
         document.getElementById("btn-play-pause").addEventListener("click", function() {
-            initAudio(); 
-            if (isPlaying) {
-                let speedFactor = activeBPM / originalBPM;
-                songPlaybackPosition += (audioCtx.currentTime - audioStartTime) * speedFactor;
-                stopPlaybackEngine();
-            } else {
-                startPlaybackEngine();
-            }
+            initAudio(); if (isPlaying) { songPlaybackPosition += (audioCtx.currentTime - audioStartTime) * (activeBPM / originalBPM); stopPlaybackEngine(); } else { startPlaybackEngine(); }
         });
 
-        document.getElementById("btn-restart").addEventListener("click", () => {
-            initAudio();
-            stopPlaybackEngine();
-            resetTimelineToZero();
-        });
-
-        document.getElementById("progress-bar").addEventListener("input", (e) => {
-            let wasPlaying = isPlaying;
-            if (isPlaying) stopPlaybackEngine();
-            
-            songPlaybackPosition = parseFloat(e.target.value);
-            document.getElementById("current-time").textContent = formatTime(songPlaybackPosition);
-            
-            if (wasPlaying) startPlaybackEngine();
-        });
-
-        document.getElementById("tempo-slider").addEventListener("input", (e) => {
-            let wasPlaying = isPlaying;
-            if (isPlaying) {
-                let speedFactor = activeBPM / originalBPM;
-                songPlaybackPosition += (audioCtx.currentTime - audioStartTime) * speedFactor;
-                stopPlaybackEngine();
-            }
-            
-            activeBPM = parseInt(e.target.value);
-            document.getElementById("tempo-val").textContent = `${activeBPM} BPM`;
-            
-            if (wasPlaying) startPlaybackEngine();
-        });
+        document.getElementById("btn-restart").addEventListener("click", () => { initAudio(); stopPlaybackEngine(); resetTimelineToZero(); });
+        document.getElementById("toggle-notation").addEventListener("click", (e) => { notationMode = notationMode === "trad" ? "am" : "trad"; e.target.textContent = `Cifrado: ${notationMode === 'trad' ? 'Trad' : 'Am'}`; renderLiraPiramidal(); });
+        document.getElementById("btn-fullscreen").addEventListener("click", () => { if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(err => alert(err.message)); } else { document.exitFullscreen(); } });
+        
+        document.getElementById("progress-bar").addEventListener("input", (e) => { let wasPlaying = isPlaying; if (isPlaying) stopPlaybackEngine(); songPlaybackPosition = parseFloat(e.target.value); document.getElementById("current-time").textContent = formatTime(songPlaybackPosition); if (wasPlaying) startPlaybackEngine(); });
+        document.getElementById("tempo-slider").addEventListener("input", (e) => { let wasPlaying = isPlaying; if (isPlaying) { songPlaybackPosition += (audioCtx.currentTime - audioStartTime) * (activeBPM / originalBPM); stopPlaybackEngine(); } activeBPM = parseInt(e.target.value); document.getElementById("tempo-val").textContent = `${activeBPM} BPM`; if (wasPlaying) startPlaybackEngine(); });
 
         window.addEventListener("DOMContentLoaded", renderLiraPiramidal);
     </script>
