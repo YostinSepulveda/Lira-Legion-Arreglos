@@ -130,7 +130,7 @@
         .tempo-area { background: #0f172a; padding: 4px; border-radius: 6px; border: 1px solid #334155; text-align: center; }
         #status-badge { background-color: #0f172a; padding: 4px; border-radius: 6px; font-size: 10px; color: #94a3b8; border: 1px solid #334155; text-align: center; }
 
-        /* BOTÓN FLOTANTE 'X' SEMI-TRANSPARENTE */
+        /* BOTÓN FLOTANTE 'X' EN LA ESQUINA SUPERIOR DERECHA */
         #btn-exit-lira {
             position: absolute; 
             top: 14px; 
@@ -157,7 +157,7 @@
             color: white;
         }
 
-        /* --- CONTROL DE MODO LIRA COMPLETA CON ESPACIADOS SEGUROS --- */
+        /* --- CONTROL DE MODO LIRA COMPLETA CON MÁRGENES DE SEGURIDAD CORREGIDOS --- */
         body.mode-lira-only header, body.mode-lira-only footer { display: none !important; }
         body.mode-lira-only main { border-radius: 0; border: none; padding: 0; }
         
@@ -170,8 +170,8 @@
             background-color: transparent;
             background-image: none;
             box-shadow: none;
-            /* SE AGREGARON SEPARACIONES PROTECTORAS: 40px arriba para cuidar SIB 7 y 30px abajo para LA 5 */
-            padding: 40px 10px 30px 10px; 
+            /* Margen protector: 35px arriba para cuidar SIB 7 y 25px abajo para despegar LA 5 */
+            padding: 35px 12px 25px 12px; 
         }
         body.mode-lira-only .tubular-overlay { display: none !important; }
 
@@ -200,6 +200,8 @@
                 <option value="">-- Elegir Marcha --</option>
                 <option value="master-of-puppets lira 1.musicxml">Master of puppets Lira 1</option>
                 <option value="master-of-puppets lira 2.musicxml">Master of puppets Lira 2</option>
+                <option value="Americas unidas lira 1.musicxml">Americas Unidas Lira 1</option>
+                <option value="Americas unidas lira 2.musicxml">Americas Unidas Lira 2 2</option>
             </select>
 
             <label class="btn-upload">
@@ -414,6 +416,11 @@
 
         document.getElementById("select-marcha-remota").addEventListener("change", function(e) {
             const fileName = e.target.value; if (!fileName) return;
+            
+            // --- NUEVO REINICIO AUTOMÁTICO AL CAMBIAR SELECCIÓN REMOTA ---
+            stopPlaybackEngine();
+            resetTimelineToZero();
+            
             document.getElementById("file-input").value = ""; 
             statusBadge.textContent = "Descargando marcha..."; statusBadge.style.color = "#f59e0b";
             const urlMarcha = `./marchas/${fileName}`;
@@ -426,6 +433,11 @@
 
         document.getElementById("file-input").addEventListener("change", function(e) {
             const file = e.target.files[0]; if (!file) return;
+            
+            // --- NUEVO REINICIO AUTOMÁTICO AL SUBIR ARCHIVO LOCAL ---
+            stopPlaybackEngine();
+            resetTimelineToZero();
+            
             document.getElementById("select-marcha-remota").value = "";
             const reader = new FileReader();
             reader.onload = function(evt) { parseMusicXML(evt.target.result); };
