@@ -35,7 +35,6 @@
         .title-area { display: flex; align-items: center; gap: 8px; }
         .badge { background-color: #f59e0b; color: #0f172a; padding: 3px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; }
         
-        /* Controles de carga */
         .load-controls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
         .select-remote { background-color: #0f172a; color: #f59e0b; border: 1px solid #334155; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; outline: none; cursor: pointer; }
         .btn-upload { background-color: #475569; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; border: 1px solid #64748b; font-weight: bold; }
@@ -140,13 +139,16 @@
             <div class="badge">A5 - Bb7</div>
             <div>
                 <b style="font-size: 14px; display: block; color: #ffffff;">Lira LegionArreglos</b>
-                <span style="font-size: 10px; color: #94a3b8;">Versión: 2.0.0 (Remoto)</span>
+                <span style="font-size: 10px; color: #94a3b8;">Versión: 2.1.0 (.musicxml listo)</span>
             </div>
         </div>
         <div class="load-controls">
+            <!-- MENÚ DESPLEGABLE REMOTO ASOCIADO A ARCHIVOS .MUSICXML -->
             <select id="select-marcha-remota" class="select-remote">
                 <option value="">-- Elegir Marcha del Servidor --</option>
-                <option value="master-of-puppets lira 2.xml">Master of puppet lira 2</option>
+                <!-- Configura aquí tus archivos con extensión .musicxml o .xml tal como los subas -->
+                <option value="marcha_ejemplo1.musicxml">Marcha de Ejemplo 1</option>
+                <option value="marcha_ejemplo2.musicxml">Marcha de Ejemplo 2</option>
             </select>
 
             <label class="btn-upload">
@@ -187,7 +189,7 @@
                 <input type="range" id="tempo-slider" min="40" max="200" value="120" class="slider-h">
             </div>
 
-            <div id="status-badge">Sube o selecciona una marcha</div>
+            <div id="status-badge">Sube tu archivo .xml o .musicxml</div>
         </footer>
     </div>
 
@@ -345,35 +347,34 @@
             }
         }
 
-        // --- SISTEMA DE CARGA REMOTA DESDE GITHUB PAGES ---
+        // --- SISTEMA DE CARGA REMOTA ADAPTADO COMPATIBLE CON .MUSICXML ---
         document.getElementById("select-marcha-remota").addEventListener("change", function(e) {
             const fileName = e.target.value;
             if (!fileName) return;
             
-            document.getElementById("file-input").value = ""; // Limpiar input local
+            document.getElementById("file-input").value = ""; 
             statusBadge.textContent = "Descargando marcha...";
             statusBadge.style.color = "#f59e0b";
 
-            // Calcula la ruta relativa a donde está corriendo tu index.html
-            // Busca automáticamente el archivo en la subcarpeta 'marchas/' de tu repositorio
             const urlMarcha = `./marchas/${fileName}`;
 
-            fetch(urlMarcha)
+            // Parche de cabeceras para forzar la compatibilidad con extensiones .musicxml en GitHub Pages
+            fetch(urlMarcha, { headers: { 'Accept': 'text/xml, application/xml, */*' } })
                 .then(response => {
-                    if (!response.ok) throw new Error("No se encontró la marcha en el repositorio");
+                    if (!response.ok) throw new Error("No se encontró el archivo .musicxml en el repositorio");
                     return response.text();
                 })
                 .then(xmlText => {
                     parseMusicXML(xmlText);
                 })
                 .catch(err => {
-                    alert("Error remoto: " + err.message + "\\n\\nAsegúrate de guardar el archivo en la carpeta 'marchas' con extensión .xml");
+                    alert("Error remoto: " + err.message + "\\n\\nRecuerda colocar la partitura de MuseScore (.musicxml o .xml descompreso) dentro de la carpeta 'marchas'.");
                     statusBadge.textContent = "Error de descarga";
                     statusBadge.style.color = "#f87171";
                 });
         });
 
-        // Subida local tradicional
+        // Subida local tradicional libre de bloqueos
         document.getElementById("file-input").addEventListener("change", function(e) {
             const file = e.target.files[0]; if (!file) return;
             document.getElementById("select-marcha-remota").value = "";
