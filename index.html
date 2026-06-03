@@ -40,6 +40,7 @@
         .btn-upload { background-color: #475569; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; border: 1px solid #64748b; font-weight: bold; }
         .btn-toggle { background-color: #f59e0b; color: #0f172a; border: none; padding: 6px 10px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer; }
         .btn-fullscreen { background-color: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-lira-only { background-color: #ea580c; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
 
         .container {
             flex: 1;
@@ -69,25 +70,32 @@
             height: 98%;
             max-height: 520px;
             box-sizing: border-box;
-            clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
             background-color: #27170c;
             background-image: linear-gradient(95deg, transparent 20%, #4a150b 20%, #310d07 32%, transparent 32%, transparent 45%, #4a150b 45%, #310d07 55%, transparent 55%, transparent 68%, #4a150b 68%, #310d07 80%, transparent 80%);
             box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
             border-bottom: 12px solid #94a3b8;
             border-radius: 0 0 16px 16px;
-            padding: 12px;
+            padding: 16px 12px 12px 12px;
+            clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
         }
 
-        .lira-frame::before {
-            content: ""; position: absolute; top: 0; bottom: 0; left: 6px; width: 8px;
-            background: linear-gradient(90deg, #94a3b8, #cbd5e1, #64748b); border-radius: 4px; transform: rotate(4deg); transform-origin: bottom left;
-        }
-        .lira-frame::after {
-            content: ""; position: absolute; top: 0; bottom: 0; right: 6px; width: 8px;
-            background: linear-gradient(90deg, #64748b, #cbd5e1, #94a3b8); border-radius: 4px; transform: rotate(-4deg); transform-origin: bottom right;
+        .tubular-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            border-left: 10px solid #cbd5e1;
+            border-right: 10px solid #cbd5e1;
+            box-sizing: border-box;
+            z-index: 5;
+            opacity: 0.85;
         }
         
-        .keyboard-area { position: relative; width: 100%; height: 100%; z-index: 6; }
+        .keyboard-area { 
+            position: relative; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 6; 
+        }
 
         .glock-key {
             background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
@@ -122,6 +130,51 @@
         .tempo-area { background: #0f172a; padding: 4px; border-radius: 6px; border: 1px solid #334155; text-align: center; }
         #status-badge { background-color: #0f172a; padding: 4px; border-radius: 6px; font-size: 10px; color: #94a3b8; border: 1px solid #334155; text-align: center; }
 
+        /* BOTÓN FLOTANTE 'X' SEMI-TRANSPARENTE */
+        #btn-exit-lira {
+            position: absolute; 
+            top: 14px; 
+            right: 14px; 
+            width: 38px;
+            height: 38px;
+            background-color: rgba(30, 41, 59, 0.4);
+            color: rgba(255, 255, 255, 0.7); 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            border-radius: 50%;
+            font-weight: bold; 
+            font-size: 18px; 
+            cursor: pointer; 
+            z-index: 100; 
+            display: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+        #btn-exit-lira:active {
+            background-color: rgba(234, 88, 12, 0.85);
+            color: white;
+        }
+
+        /* --- CONTROL DE MODO LIRA COMPLETA CON ESPACIADOS SEGUROS --- */
+        body.mode-lira-only header, body.mode-lira-only footer { display: none !important; }
+        body.mode-lira-only main { border-radius: 0; border: none; padding: 0; }
+        
+        body.mode-lira-only .lira-frame { 
+            width: 100vw; 
+            height: 100vh; 
+            max-width: none; 
+            max-height: none;
+            border: none;
+            background-color: transparent;
+            background-image: none;
+            box-shadow: none;
+            /* SE AGREGARON SEPARACIONES PROTECTORAS: 40px arriba para cuidar SIB 7 y 30px abajo para LA 5 */
+            padding: 40px 10px 30px 10px; 
+        }
+        body.mode-lira-only .tubular-overlay { display: none !important; }
+
         @media (max-width: 480px) {
             .container { flex-direction: column; }
             footer { width: auto; height: auto; flex-direction: row; flex-wrap: wrap; padding: 6px; }
@@ -134,41 +187,43 @@
 </head>
 <body>
 
-    <header>
+    <header id="app-header">
         <div class="title-area">
             <div class="badge">A5 - Bb7</div>
             <div>
                 <b style="font-size: 14px; display: block; color: #ffffff;">Lira LegionArreglos</b>
-                <span style="font-size: 10px; color: #94a3b8;">Versión: 2.1.0 (.musicxml listo)</span>
+                <span style="font-size: 10px; color: #94a3b8;">Versión: 2.5.0 (Ajuste de Margen)</span>
             </div>
         </div>
         <div class="load-controls">
-            <!-- MENÚ DESPLEGABLE REMOTO ASOCIADO A ARCHIVOS .MUSICXML -->
             <select id="select-marcha-remota" class="select-remote">
-                <option value="">-- Elegir Marcha del Servidor --</option>
-                <!-- Configura aquí tus archivos con extensión .musicxml o .xml tal como los subas -->
-                <option value="master-of-puppets lira 2.musicxml">Master of Puppet lira 2</option>
+                <option value="">-- Elegir Marcha --</option>
+                <option value="master-of-puppets lira 1.musicxml">Master of puppets Lira 1</option>
+                <option value="master-of-puppets lira 2.musicxml">Master of puppets Lira 2</option>
             </select>
 
             <label class="btn-upload">
-                📂 Subir Local
+                📂 Partitura
                 <input type="file" id="file-input" accept="*/*" style="display: none;">
             </label>
             <button id="toggle-notation" class="btn-toggle">Cifrado: Trad</button>
             <button id="btn-fullscreen" class="btn-fullscreen">
                 <span>⛶</span> <span>Pantalla Completa</span>
             </button>
+            <button id="btn-lira-mode" class="btn-lira-only">🔍 Lira Completa</button>
         </div>
     </header>
 
-    <div class="container">
+    <div class="container" id="app-container">
         <main>
-            <div class="lira-frame">
+            <div class="lira-frame" id="main-lira-frame">
+                <div class="tubular-overlay" id="metal-tubes"></div>
                 <div id="keyboard-container" class="keyboard-area"></div>
             </div>
+            <button id="btn-exit-lira">✕</button>
         </main>
 
-        <footer>
+        <footer id="app-footer">
             <div class="timeline-vertical">
                 <span id="total-time" style="font-family: monospace; font-size: 10px; color: #f59e0b;">00:00</span>
                 <input type="range" id="progress-bar" class="slider-v" min="0" max="100" value="0" step="0.1">
@@ -243,15 +298,25 @@
             const totalNaturals = naturals.length;
             const stepPercent = 100 / totalNaturals;
 
+            const isExpanded = document.body.classList.contains("mode-lira-only");
+            
+            const baseWidthNat = isExpanded ? 165 : 130;
+            const topWidthNat  = isExpanded ? 115 : 85;
+            
+            const baseWidthAcc = isExpanded ? 140 : 110;
+            const topWidthAcc  = isExpanded ? 95 : 70;
+
+            // Naturales (Derecha)
             naturals.forEach((note, index) => {
                 const key = document.createElement("div");
                 key.className = "glock-key"; key.id = `key-${note.midi}`;
                 const bottomPosition = index * stepPercent;
-                const baseWidth = 130; const topWidth = 85;
-                const dynamicWidth = baseWidth - (index * ((baseWidth - topWidth) / totalNaturals));
+                
+                const dynamicWidth = baseWidthNat - (index * ((baseWidthNat - topWidthNat) / totalNaturals));
+                
                 key.style.bottom = `${bottomPosition}%`; key.style.height = `calc(${stepPercent}% - 4px)`;
                 key.style.width = `${dynamicWidth}px`; key.style.right = `calc(50% - ${dynamicWidth}px - 2px)`;
-                key.style.fontSize = "11px";
+                key.style.fontSize = isExpanded ? "12px" : "11px";
                 key.innerHTML = `<div class="rivet rivet-left"></div><span>${notationMode === 'trad' ? note.trad : note.am}</span><div class="rivet rivet-right"></div>`;
                 
                 const trigger = (e) => { e.preventDefault(); initAudio(); if(audioCtx) scheduleLiraNote(note.midi, audioCtx.currentTime); flashKey(key, 0.15); };
@@ -259,20 +324,21 @@
                 keyboardContainer.appendChild(key);
             });
 
+            // Alteraciones (Izquierda)
             noteDefinition.forEach((note) => {
                 if (note.type === "accidental") {
                     const naturalBefore = noteDefinition.find(n => n.midi === note.midi - 1);
                     if (naturalBefore) {
                         const natIndex = naturals.findIndex(n => n.midi === naturalBefore.midi);
                         const bottomPosition = ((natIndex + 1) * stepPercent) - (stepPercent * 0.35);
-                        const baseWidth = 110; const topWidth = 70;
-                        const dynamicWidth = baseWidth - (natIndex * ((baseWidth - topWidth) / totalNaturals));
+                        
+                        const dynamicWidth = baseWidthAcc - (natIndex * ((baseWidthAcc - topWidthAcc) / totalNaturals));
 
                         const key = document.createElement("div");
                         key.className = "glock-key"; key.id = `key-${note.midi}`;
                         key.style.bottom = `${bottomPosition}%`; key.style.height = `calc(${stepPercent}% - 6px)`;
                         key.style.width = `${dynamicWidth}px`; key.style.left = `calc(50% - ${dynamicWidth}px - 2px)`;
-                        key.style.fontSize = "10px";
+                        key.style.fontSize = isExpanded ? "11px" : "10px";
                         key.innerHTML = `<div class="rivet rivet-left"></div><span>${notationMode === 'trad' ? note.trad : note.am}</span><div class="rivet rivet-right"></div>`;
 
                         const trigger = (e) => { e.preventDefault(); initAudio(); if(audioCtx) scheduleLiraNote(note.midi, audioCtx.currentTime); flashKey(key, 0.15); };
@@ -346,41 +412,47 @@
             }
         }
 
-        // --- SISTEMA DE CARGA REMOTA ADAPTADO COMPATIBLE CON .MUSICXML ---
         document.getElementById("select-marcha-remota").addEventListener("change", function(e) {
-            const fileName = e.target.value;
-            if (!fileName) return;
-            
+            const fileName = e.target.value; if (!fileName) return;
             document.getElementById("file-input").value = ""; 
-            statusBadge.textContent = "Descargando marcha...";
-            statusBadge.style.color = "#f59e0b";
-
+            statusBadge.textContent = "Descargando marcha..."; statusBadge.style.color = "#f59e0b";
             const urlMarcha = `./marchas/${fileName}`;
 
-            // Parche de cabeceras para forzar la compatibilidad con extensiones .musicxml en GitHub Pages
             fetch(urlMarcha, { headers: { 'Accept': 'text/xml, application/xml, */*' } })
-                .then(response => {
-                    if (!response.ok) throw new Error("No se encontró el archivo .musicxml en el repositorio");
-                    return response.text();
-                })
-                .then(xmlText => {
-                    parseMusicXML(xmlText);
-                })
-                .catch(err => {
-                    alert("Error remoto: " + err.message + "\\n\\nRecuerda colocar la partitura de MuseScore (.musicxml o .xml descompreso) dentro de la carpeta 'marchas'.");
-                    statusBadge.textContent = "Error de descarga";
-                    statusBadge.style.color = "#f87171";
-                });
+                .then(response => { if (!response.ok) throw new Error("No se encontró el archivo"); return response.text(); })
+                .then(xmlText => parseMusicXML(xmlText))
+                .catch(err => { alert("Error: " + err.message); statusBadge.textContent = "Error de descarga"; statusBadge.style.color = "#f87171"; });
         });
 
-        // Subida local tradicional libre de bloqueos
         document.getElementById("file-input").addEventListener("change", function(e) {
             const file = e.target.files[0]; if (!file) return;
             document.getElementById("select-marcha-remota").value = "";
-            statusBadge.textContent = "Cargando local...";
             const reader = new FileReader();
             reader.onload = function(evt) { parseMusicXML(evt.target.result); };
             reader.readAsText(file);
+        });
+
+        const bodyEl = document.body;
+        const btnExitLira = document.getElementById("btn-exit-lira");
+
+        document.getElementById("btn-lira-mode").addEventListener("click", () => {
+            bodyEl.classList.add("mode-lira-only");
+            btnExitLira.style.display = "flex"; 
+            renderLiraPiramidal();
+
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+        });
+
+        btnExitLira.addEventListener("click", () => {
+            bodyEl.classList.remove("mode-lira-only");
+            btnExitLira.style.display = "none";
+            renderLiraPiramidal();
+
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
         });
 
         function formatTime(sec) {
@@ -398,8 +470,11 @@
                 currentSongTime = totalSongDuration; stopPlaybackEngine(); resetTimelineToZero(); return;
             }
 
-            document.getElementById("progress-bar").value = currentSongTime;
-            document.getElementById("current-time").textContent = formatTime(currentSongTime);
+            if(!bodyEl.classList.contains("mode-lira-only")) {
+                document.getElementById("progress-bar").value = currentSongTime;
+                document.getElementById("current-time").textContent = formatTime(currentSongTime);
+            }
+            
             let endScanZone = currentSongTime + SCHEDULE_AHEAD_SEC;
 
             loadedNotes.forEach(note => {
