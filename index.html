@@ -130,7 +130,6 @@
         .tempo-area { background: #0f172a; padding: 4px; border-radius: 6px; border: 1px solid #334155; text-align: center; }
         #status-badge { background-color: #0f172a; padding: 4px; border-radius: 6px; font-size: 10px; color: #94a3b8; border: 1px solid #334155; text-align: center; }
 
-        /* BOTÓN FLOTANTE 'X' EN LA ESQUINA SUPERIOR DERECHA */
         #btn-exit-lira {
             position: absolute; 
             top: 14px; 
@@ -157,7 +156,6 @@
             color: white;
         }
 
-        /* --- CONTROL DE MODO LIRA COMPLETA CON MÁRGENES DE SEGURIDAD CORREGIDOS --- */
         body.mode-lira-only header, body.mode-lira-only footer { display: none !important; }
         body.mode-lira-only main { border-radius: 0; border: none; padding: 0; }
         
@@ -170,7 +168,6 @@
             background-color: transparent;
             background-image: none;
             box-shadow: none;
-            /* Margen protector: 35px arriba para cuidar SIB 7 y 25px abajo para despegar LA 5 */
             padding: 35px 12px 25px 12px; 
         }
         body.mode-lira-only .tubular-overlay { display: none !important; }
@@ -192,7 +189,7 @@
             <div class="badge">A5 - Bb7</div>
             <div>
                 <b style="font-size: 14px; display: block; color: #ffffff;">Lira LegionArreglos</b>
-                <span style="font-size: 10px; color: #94a3b8;">Versión: 2.5.0 (Ajuste de Margen)</span>
+                <span style="font-size: 10px; color: #94a3b8;">Versión: 2.6.0 (Mejora de Sonido)</span>
             </div>
         </div>
         <div class="load-controls">
@@ -257,25 +254,95 @@
 
     <script>
         let audioCtx = null;
+        let masterCompressor = null;
+        let masterGain = null;
+
         function initAudio() {
-            if (!audioCtx) audioCtx = new AudioContext();
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+                
+                // Configuración para evitar saturación/clipping
+                masterCompressor = audioCtx.createDynamicsCompressor();
+                masterCompressor.threshold.setValueAtTime(-10, audioCtx.currentTime);
+                masterCompressor.knee.setValueAtTime(10, audioCtx.currentTime);
+                masterCompressor.ratio.setValueAtTime(12, audioCtx.currentTime);
+                masterCompressor.attack.setValueAtTime(0, audioCtx.currentTime);
+                masterCompressor.release.setValueAtTime(0.2, audioCtx.currentTime);
+
+                masterGain = audioCtx.createGain();
+                masterGain.gain.value = 0.6; // Reducimos el volumen base maestro
+
+                masterCompressor.connect(masterGain);
+                masterGain.connect(audioCtx.destination);
+            }
         }
 
-        function scheduleLiraNote(midiNote, targetAudioTime) {
+function scheduleLiraNote(midiNote, targetAudioTime) {
             if (!audioCtx) return;
-            const frequency = 440 * Math.pow(2, (midiNote - 69) / 12);
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            osc.type = 'triangle'; 
-            osc.frequency.setValueAtTime(frequency, targetAudioTime);
-            gainNode.gain.setValueAtTime(0.4, targetAudioTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.0001, targetAudioTime + 0.8);
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            osc.start(targetAudioTime);
-            osc.stop(targetAudioTime + 0.8);
-        }
+            const frequency = 442 * Math.pow(2, (midiNote - 69) / 12);
 
+            // 1. FACTOR DE DURACIÓN: Las notas graves (ej. LA 5 = midi 81) durarán más tiempo
+            // Las notas agudas (ej. SIB 7 = midi 106) se apagarán más rápido.
+            const durationFactor = 1 + (106 - midiNote) * 0.05; 
+            
+            // 2. REFUERZO DE GRAVES (Bass Boost): Aplicamos más "cuerpo" a las notas por debajo del DO 7 (midi 96)
+            const bassBoost = Math.max(0, (96 - midiNote) / 15); 
+
+            // --- OSCILADOR 1: Fundamental (El cuerpo limpio y profundo de la campana) ---
+            const oscFundamental = audioCtx.createOscillator();
+            oscFundamental.type = 'sine';
+            oscFundamental.frequency.setValueAtTime(frequency, targetAudioTime);
+
+            const gainFundamental = audioCtx.createGain();
+            gainFundamental.gain.setValueAtTime(0, targetAudioTime);
+            // Si es grave, subimos un poco más el volumen inicial
+            gainFundamental.gain.linearRampToValueAtTime(0.7 + (bassBoost * 0.2), targetAudioTime + 0.01);
+            // Decaimiento prolongado según la nota
+            gainFundamental.gain.exponentialRampToValueAtTime(0.001, targetAudioTime + (1.2 * durationFactor));
+
+            // --- OSCILADOR 2: Textura Metálica (Quita el sonido a "flauta" de los graves) ---
+            // Usa la misma frecuencia pero con forma triangular para dar "aspereza" acústica
+            const oscTexture = audioCtx.createOscillator();
+            oscTexture.type = 'triangle';
+            oscTexture.frequency.setValueAtTime(frequency, targetAudioTime);
+            
+            const gainTexture = audioCtx.createGain();
+            gainTexture.gain.setValueAtTime(0, targetAudioTime);
+            gainTexture.gain.linearRampToValueAtTime(0.3 + (bassBoost * 0.25), targetAudioTime + 0.005);
+            gainTexture.gain.exponentialRampToValueAtTime(0.001, targetAudioTime + (0.7 * durationFactor));
+
+            // --- OSCILADOR 3: Armónico / Golpe del Baquetón (El "Ping" agudo brillante) ---
+            const oscHarmonic = audioCtx.createOscillator();
+            oscHarmonic.type = 'triangle';
+            // Frecuencia inarmónica típica (2.75 veces la fundamental)
+            oscHarmonic.frequency.setValueAtTime(frequency * 2.75, targetAudioTime);
+
+            const gainHarmonic = audioCtx.createGain();
+            gainHarmonic.gain.setValueAtTime(0, targetAudioTime);
+            gainHarmonic.gain.linearRampToValueAtTime(0.25, targetAudioTime + 0.002);
+            gainHarmonic.gain.exponentialRampToValueAtTime(0.001, targetAudioTime + (0.2 * durationFactor));
+
+            // Conectar los tres osciladores al compresor maestro (que previene la distorsión)
+            oscFundamental.connect(gainFundamental);
+            gainFundamental.connect(masterCompressor);
+            
+            oscTexture.connect(gainTexture);
+            gainTexture.connect(masterCompressor);
+
+            oscHarmonic.connect(gainHarmonic);
+            gainHarmonic.connect(masterCompressor);
+
+            // Iniciar osciladores
+            oscFundamental.start(targetAudioTime);
+            oscTexture.start(targetAudioTime);
+            oscHarmonic.start(targetAudioTime);
+            
+            // Detener osciladores dinámicamente dando tiempo a que la estela (reverb natural) termine
+            const stopTime = targetAudioTime + (1.6 * durationFactor);
+            oscFundamental.stop(stopTime);
+            oscTexture.stop(stopTime);
+            oscHarmonic.stop(stopTime);
+        }
         const noteDefinition = [
             { midi: 81, trad: "LA 5", am: "A5", type: "natural" }, { midi: 82, trad: "SIB 5", am: "Bb5", type: "accidental" },
             { midi: 83, trad: "SI 5", am: "B5", type: "natural" }, { midi: 84, trad: "DO 6", am: "C6", type: "natural" },
@@ -423,7 +490,6 @@
         document.getElementById("select-marcha-remota").addEventListener("change", function(e) {
             const fileName = e.target.value; if (!fileName) return;
             
-            // --- NUEVO REINICIO AUTOMÁTICO AL CAMBIAR SELECCIÓN REMOTA ---
             stopPlaybackEngine();
             resetTimelineToZero();
             
@@ -440,7 +506,6 @@
         document.getElementById("file-input").addEventListener("change", function(e) {
             const file = e.target.files[0]; if (!file) return;
             
-            // --- NUEVO REINICIO AUTOMÁTICO AL SUBIR ARCHIVO LOCAL ---
             stopPlaybackEngine();
             resetTimelineToZero();
             
